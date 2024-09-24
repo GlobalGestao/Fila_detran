@@ -33,6 +33,7 @@ function atualizarAtendimentoAtual() {
                 }
 
                 // Chamar o nome do paciente
+                console.log(`Chamando paciente: ${atendimentoAtual.nome}, Guichê: ${atendimentoAtual.guiche}`);
                 falarNome(atendimentoAtual.nome, atendimentoAtual.guiche);
                 
                 // Definir intervalo para repetir o anúncio
@@ -43,6 +44,7 @@ function atualizarAtendimentoAtual() {
                         if (speechSynthesis.speaking) {
                             speechSynthesis.cancel();
                         }
+                        console.log(`Repetindo chamado para: ${atendimentoAtual.nome}`);
                         falarNome(atendimentoAtual.nome, atendimentoAtual.guiche);
                     } else {
                         clearInterval(intervaloDeFala);
@@ -68,7 +70,12 @@ function falarNome(nome, guiche) {
     utterance.onend = () => {
         console.log(`Fala concluída: ${mensagem}`);
     };
-    
+
+    utterance.onerror = (event) => {
+        console.error('Erro na fala:', event.error);
+    };
+
+    console.log(`Iniciando fala: ${mensagem}`);
     speechSynthesis.speak(utterance);
 }
 
@@ -92,7 +99,11 @@ setInterval(atualizarHoraETempo, 1000);
 
 // Atualizar as informações ao carregar a página
 window.onload = function () {
+    if ('speechSynthesis' in window) {
+        console.log('A síntese de fala está disponível.');
+    } else {
+        console.error('A síntese de fala não é suportada neste navegador.');
+    }
     atualizarAtendimentoAtual();
     atualizarHoraETempo();
 };
-

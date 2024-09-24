@@ -104,12 +104,14 @@ def chamar_paciente():
         socketio.start_background_task(update_status, nome)
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        print(f"Erro ao chamar paciente: {str(e)}")  # Imprime o erro no console
+        return jsonify({'error': 'Ocorreu um erro ao chamar o paciente: ' + str(e)}), 500
     finally:
         cursor.close()
         conn.close()
 
     return jsonify({'message': 'Paciente chamado com sucesso!'}), 200
+
 
 
 @app.route('/deletar-paciente', methods=['DELETE'])

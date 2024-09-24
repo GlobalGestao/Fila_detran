@@ -54,12 +54,19 @@ async function adicionarPaciente(tipo) {
 async function getFila() {
     try {
         const response = await fetch('http://127.0.0.1:8000/get-fila', { method: 'GET' });
+
+        // Verifique se a resposta é válida
+        if (!response.ok) {
+            throw new Error('Erro na requisição: ' + response.statusText);
+        }
+
         const pacientes = await response.json();
-        document.getElementById('pacientes-na-frente').textContent = pacientes.length;
+        document.getElementById('pacientes-na-frente').textContent = pacientes.length; // Ajuste conforme o retorno
     } catch (error) {
         console.error('Erro ao buscar a fila:', error);
     }
 }
+
 
 // Atualiza a fila ao carregar a página
 window.onload = function() {

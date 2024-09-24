@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar na Fila</title>
+    <link rel="stylesheet" href="/static/css/style_fila.css">
+    <script defer src="/static/scripts/script_fila.js"></script>
+
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Entrada na Fila - Clínica Detran</h1>
+        </header>
+
+        <main>
+            <div class="form-container">
+                <label for="nome">Nome do Paciente:</label>
+                <input type="text" id="nome" placeholder="Digite seu nome">
+
+                <div class="buttons">
+                    <button class="btn" id="convencional-btn">Convencional</button>
+                    <button class="btn" id="prioridade-btn">Prioridade</button>
+                </div>
+            </div>
+
+            <div class="queue-info">
+                <p>Pacientes na frente: <span id="pacientes-na-frente">0</span></p>
+            </div>
+
+            <div id="notification" class="notification hidden">
+                Você entrou na fila, aguarde ser chamado
+            </div>
+        </main>
+    </div>
+</body>
+</html>

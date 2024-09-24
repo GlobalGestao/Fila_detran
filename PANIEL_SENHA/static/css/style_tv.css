@@ -1,0 +1,90 @@
+/* Estilos gerais do painel TV */
+.container {
+    display: flex;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background-color: #88acd0; /* Cor de fundo mais clara */
+}
+
+.left-section {
+    flex: 2;
+    background-color: #ffffff;
+    padding: 20px;
+    border-right: 2px solid #004aad;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centraliza o conteúdo verticalmente */
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+}
+
+.right-section {
+    flex: 1;
+    background-color: #f0f0f0;
+    padding: 20px;
+    display: flex;
+    justify-content: center; /* Centraliza o conteúdo horizontalmente */
+    align-items: center; /* Centraliza o conteúdo verticalmente */
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.clinic-logo {
+    max-width: 30%;
+    height: auto;
+}
+
+.current-attendance {
+    color: rgb(255, 255, 255);
+    padding: 30px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 3rem; /* Aumenta o tamanho da fonte para visibilidade em TV */
+    background-color: #004aad; /* Azul padrão para o fundo */
+}
+
+.current-attendance h2 {
+    font-size: 4rem; /* Título maior */
+    margin-bottom: 20px;
+}
+
+.current-attendance .info {
+    font-size: 3rem; /* Aumenta o tamanho da fonte para visibilidade */
+    line-height: 0; /* Ajusta o espaçamento entre linhas */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* Espaçamento entre os itens */
+}
+
+#time-weather {
+    text-align: center;
+    font-size: 2.5rem;
+}
+
+#current-time {
+    font-size: 4rem; /* Tamanho da fonte para a hora */
+    font-weight: bold; /* Negrito para destacar a hora */
+}
+
+#current-weather {
+    font-size: 2.5rem; /* Tamanho da fonte para o clima */
+}
+
+/* Animação suave para a exibição de atendimento atual */
+.current-attendance {
+    transition: all 0.5s ease-in-out;
+}
+
+.current-attendance.fade-in {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.current-attendance.fade-out {
+    opacity: 0;
+    transform: scale(0.95);
+}

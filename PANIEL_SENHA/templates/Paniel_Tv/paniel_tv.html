@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Senha - TV</title>
+    <link rel="stylesheet" href="/static/css/style_tv.css">
+    <!-- Adicione o script do Socket.IO -->
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script defer src="/static/scripts/script_tv.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Seção da esquerda: Atendimento Atual -->
+        <div class="left-section">
+            <!-- Logo da Clínica -->
+            <div class="logo-container">
+                <img src="/static/images/logo.png" alt="Logo da Clínica" class="clinic-logo">
+            </div>
+
+            <!-- Atendimento Atual -->
+            <div class="current-attendance" id="current-attendance">
+                <h2>Atendimento Atual</h2>
+                <div class="info">
+                    <p><strong>Nome:</strong> <span id="current-name">Fulano de Tal</span></p>
+                    <p><strong>Guichê:</strong> <span id="current-guiche">05</span></p>
+                    <p><strong>Tipo de Atendimento:</strong> 
+                        <span id="current-type">Convencional</span> <!-- Este campo será atualizado dinamicamente -->
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção da direita: Hora e Tempo -->
+        <div class="right-section">
+            <div id="time-weather">
+                <p id="current-time"></p>
+                <p id="current-weather"></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

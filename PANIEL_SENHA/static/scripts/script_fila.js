@@ -53,7 +53,7 @@ async function adicionarPaciente(tipo) {
 // Função para buscar a contagem de pacientes na fila
 async function getFila() {
     try {
-        const response = await fetch('http://127.0.0.1:5000/get-fila', { method: 'GET' });
+        const response = await fetch('http://127.0.0.1:8000/get-fila', { method: 'GET' });
         const pacientes = await response.json();
         document.getElementById('pacientes-na-frente').textContent = pacientes.length;
     } catch (error) {

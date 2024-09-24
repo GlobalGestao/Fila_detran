@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Função para obter e renderizar os pacientes na fila
     function carregarPacientes() {
-        fetch('http://127.0.0.1:8000/get-fila')
+        fetch('http://54.207.228.5:8000/get-fila')
             .then(response => response.json())
             .then(pacientes => {
                 const listaFila = document.getElementById('lista-fila');
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Função para chamar o paciente
     function chamarPaciente(nome, guiche) {
-        fetch('http://127.0.0.1:8000/chamar-paciente', {
+        fetch('http://54.207.228.5:8000/chamar-paciente', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ nome: nome, guiche: guiche })
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Função para deletar o paciente
     function deletarPaciente(nome) {
-        fetch('http://127.0.0.1:8000/deletar-paciente', {
+        fetch('http://54.207.228.5:8000/deletar-paciente', {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ nome: nome })

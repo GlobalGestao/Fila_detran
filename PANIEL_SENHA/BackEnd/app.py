@@ -149,8 +149,9 @@ def get_lista_atendidos():
 
 @app.after_request
 def apply_csp(response):
-    response.headers['Content-Security-Policy'] = "default-src 'self'; style-src 'self' 'unsafe-inline';"
+    response.headers['Content-Security-Policy'] = "default-src 'self'; connect-src 'self' http://127.0.0.1:5000; style-src 'self' 'unsafe-inline';"
     return response
+
 
 
 if __name__ == '__main__':

@@ -72,8 +72,6 @@ def get_fila():
     lista_pacientes = [{'nome': paciente[0], 'tipo_atendimento': paciente[1]} for paciente in pacientes]
     return jsonify(lista_pacientes)
 
-from flask import jsonify, request
-from flask_socketio import emit
 
 @app.route('/chamar-paciente', methods=['POST'])
 def chamar_paciente():
@@ -121,19 +119,11 @@ def update_status(nome):
         )
         conn.commit()
 
-        # Deletar do banco de dados após 20 segundos
-        socketio.sleep(20)
-        cursor.execute('DELETE FROM fila_pacientes WHERE nome = %s', (nome,))
-        conn.commit()
-
     except Exception as e:
         print(f"Erro ao atualizar status para {nome}: {str(e)}")
     finally:
         cursor.close()
         conn.close()
-
-
-    return jsonify({'message': 'Paciente chamado com sucesso!'}), 200
 
 def update_status(nome, cursor, conn):
     # Atualiza o status para "atendido" após 30 segundos

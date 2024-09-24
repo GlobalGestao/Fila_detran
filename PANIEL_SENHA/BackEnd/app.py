@@ -8,6 +8,18 @@ app = Flask(__name__, template_folder='../templates')
 CORS(app, resources={r"/*": {"origins": "*"}})  # Ajuste de CORS
 socketio = SocketIO(app)
 
+@app.route('/fila')
+def fila():
+    return render_template('fila/fila.html')
+
+@app.route('/chamada')
+def chamada():
+    return render_template('Chamada/chamada.html')
+
+@app.route('/paniel_tv')
+def paniel_tv():
+    return render_template('Paniel_Tv/paniel_tv.html')
+
 @app.route('/')
 def menu():
     try:
@@ -133,14 +145,6 @@ def get_lista_atendidos():
 
     lista_atendidos = [{'nome': atendido[0], 'guiche': atendido[1]} for atendido in atendidos]
     return jsonify(lista_atendidos)
-
-@app.route('/fila')
-def fila():
-    try:
-        return render_template('fila/fila.html')  # Renderiza o template fila.html
-    except Exception as e:
-        print(f"Erro ao renderizar fila: {e}")
-        return "Erro ao carregar a fila", 500
 
 
 @app.after_request

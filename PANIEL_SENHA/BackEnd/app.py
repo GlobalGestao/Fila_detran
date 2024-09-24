@@ -64,14 +64,13 @@ def adicionar_paciente():
 def get_fila():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT nome, tipo_atendimento FROM fila_pacientes WHERE status = %s')
+    cursor.execute('SELECT nome, tipo_atendimento, status FROM fila_pacientes')  # Retorna todos os pacientes
     pacientes = cursor.fetchall()
     cursor.close()
     conn.close()
 
-    lista_pacientes = [{'nome': paciente[0], 'tipo_atendimento': paciente[1]} for paciente in pacientes]
+    lista_pacientes = [{'nome': paciente[0], 'tipo_atendimento': paciente[1], 'status': paciente[2]} for paciente in pacientes]
     return jsonify(lista_pacientes)
-
 
 
 

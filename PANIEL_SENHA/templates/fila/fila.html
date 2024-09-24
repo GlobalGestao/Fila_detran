@@ -4,8 +4,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Entrar na Fila</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_fila.css') }}">
-    <script defer src="{{ url_for('static', filename='scripts/script_fila.js') }}"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #e0e0e0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #004aad;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-container {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1.2rem;
+            color: #333;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 1.1rem;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            background-color: #004aad;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #00337d;
+        }
+
+        .queue-info {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .queue-info span {
+            font-weight: bold;
+            color: #004aad;
+        }
+
+        .notification {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            opacity: 0;
+            transform: scale(1);
+            transition: all 0.5s ease;
+            visibility: hidden; /* Usar visibility ao invés de display: none */
+        }
+
+        .notification.visible {
+            opacity: 1;
+            transform: scale(1.05);
+            visibility: visible; /* Tornar visível */
+        }
+
+        .notification.hidden {
+            opacity: 0;
+            transform: scale(1);
+            visibility: hidden; /* Ocultar usando visibility */
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -33,5 +150,75 @@
             </div>
         </main>
     </div>
+
+    <script>
+        document.getElementById('convencional-btn').addEventListener('click', () => {
+            adicionarPaciente("Convencional");
+            getFila();  // Atualiza a fila após adicionar o paciente
+        });
+
+        document.getElementById('prioridade-btn').addEventListener('click', () => {
+            adicionarPaciente("Prioridade");
+            getFila();  // Atualiza a fila após adicionar o paciente
+        });
+
+        // Função para adicionar um paciente
+        async function adicionarPaciente(tipo) {
+            const nome = document.getElementById('nome').value.trim();
+            const notification = document.getElementById('notification');
+
+            if (nome === "") {
+                alert("Por favor, insira um nome.");
+                return;
+            }
+
+            // Enviar dados para a API
+            try {
+                const response = await fetch('http://127.0.0.1:5000/adicionar-paciente', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ nome: nome, tipo: tipo }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao adicionar paciente');
+                }
+
+                const result = await response.json();
+                notification.textContent = result.message;
+                notification.classList.remove('hidden');
+                notification.classList.add('visible');
+
+                setTimeout(() => {
+                    notification.classList.remove('visible');
+                    notification.classList.add('hidden');
+                }, 3000);
+
+                // Limpar o campo de entrada
+                document.getElementById('nome').value = '';
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao adicionar paciente');
+            }
+        }
+
+        // Função para buscar a contagem de pacientes na fila
+        async function getFila() {
+            try {
+                const response = await fetch('http://127.0.0.1:5000/get-fila', { method: 'GET' });
+                const pacientes = await response.json();
+                document.getElementById('pacientes-na-frente').textContent = pacientes.length;
+            } catch (error) {
+                console.error('Erro ao buscar a fila:', error);
+            }
+        }
+
+        // Atualiza a fila ao carregar a página
+        window.onload = function() {
+            getFila();
+        };
+    </script>
 </body>
 </html>

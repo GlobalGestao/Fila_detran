@@ -72,8 +72,6 @@ def get_fila():
     lista_pacientes = [{'nome': paciente[0], 'tipo_atendimento': paciente[1], 'status': paciente[2]} for paciente in pacientes]
     return jsonify(lista_pacientes)
 
-
-
 @app.route('/chamar-paciente', methods=['POST'])
 def chamar_paciente():
     data = request.json
@@ -87,17 +85,26 @@ def chamar_paciente():
     cursor = conn.cursor()
 
     try:
+        # Verifica se o paciente existe
+        cursor.execute('SELECT * FROM fila_pacientes WHERE nome = %s', (nome,))
+        paciente_existente = cursor.fetchone()
+        if not paciente_existente:
+            return jsonify({'error': 'Paciente não encontrado!'}), 404
+
+        # Atualiza o status
         cursor.execute(
             'UPDATE fila_pacientes SET status = %s, guiche = %s WHERE nome = %s',
             ('chamado', guiche, nome)
         )
         conn.commit()
+        if cursor.rowcount == 0:
+            return jsonify({'error': 'Falha ao atualizar paciente.'}), 500
 
-        # Emite o evento para o cliente
+        # Emitindo o evento
         socketio.emit('paciente_chamado', {'nome': nome, 'guiche': guiche})
 
-        # Inicia a tarefa em segundo plano para atualizar o status
-        socketio.start_background_task(update_status, nome)
+        # Inicia a tarefa em segundo plano se necessário
+        # socketio.start_background_task(update_status, nome)
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -106,6 +113,9 @@ def chamar_paciente():
         conn.close()
 
     return jsonify({'message': 'Paciente chamado com sucesso!'}), 200
+
+
+
 
 @app.route('/deletar-paciente', methods=['DELETE'])
 def deletar_paciente():

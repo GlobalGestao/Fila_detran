@@ -63,6 +63,12 @@ function atualizarAtendimentoAtual() {
 function falarNome(nome, guiche) {
     const mensagem = `Por favor, ${nome}, dirija-se ao guichê ${guiche}.`;
     const utterance = new SpeechSynthesisUtterance(mensagem);
+    
+    // Adicionar um evento para verificar quando a fala termina
+    utterance.onend = () => {
+        console.log(`Fala concluída: ${mensagem}`);
+    };
+    
     speechSynthesis.speak(utterance);
 }
 
@@ -89,3 +95,4 @@ window.onload = function () {
     atualizarAtendimentoAtual();
     atualizarHoraETempo();
 };
+

@@ -5,7 +5,7 @@ const maxTentativas = 3;
 
 // Função para atualizar o atendimento atual
 function atualizarAtendimentoAtual() {
-    fetch('http://127.0.0.1:5000/get-atendimento-atual')
+    fetch('http://127.0.0.1:8000/get-atendimento-atual')
         .then(response => response.json())
         .then(atendimentoAtual => {
             const attendanceSection = document.getElementById('current-attendance');

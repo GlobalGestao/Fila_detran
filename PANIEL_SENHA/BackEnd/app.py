@@ -72,6 +72,9 @@ def get_fila():
     lista_pacientes = [{'nome': paciente[0], 'tipo_atendimento': paciente[1]} for paciente in pacientes]
     return jsonify(lista_pacientes)
 
+from flask import jsonify, request
+from flask_socketio import emit
+
 @app.route('/chamar-paciente', methods=['POST'])
 def chamar_paciente():
     data = request.json
@@ -83,14 +86,29 @@ def chamar_paciente():
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute(
-        'UPDATE fila_pacientes SET status = %s, guiche = %s WHERE nome = %s',
-        ('chamado', guiche, nome)
-    )
-    conn.commit()
+    
+    try:
+        cursor.execute(
+            'UPDATE fila_pacientes SET status = %s, guiche = %s WHERE nome = %s',
+            ('chamado', guiche, nome)
+        )
+        conn.commit()
 
-    socketio.emit('paciente_chamado', {'nome': nome, 'guiche': guiche})
+        # Emite o evento para o cliente
+        socketio.emit('paciente_chamado', {'nome': nome, 'guiche': guiche})
 
+        # Inicia a tarefa em segundo plano para atualizar o status
+        socketio.start_background_task(update_status, nome, cursor, conn)
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        cursor.close()
+        conn.close()
+
+    return jsonify({'message': 'Paciente chamado com sucesso!'}), 200
+
+def update_status(nome, cursor, conn):
     # Atualiza o status para "atendido" após 30 segundos
     socketio.sleep(30)
     cursor.execute(
@@ -99,13 +117,28 @@ def chamar_paciente():
     )
     conn.commit()
 
-    # Deletar do banco de dados após 50 segundos
+    # Deletar do banco de dados após 20 segundos
     socketio.sleep(20)
     cursor.execute('DELETE FROM fila_pacientes WHERE nome = %s', (nome,))
     conn.commit()
-    
-    cursor.close()
-    conn.close()
+
+
+    return jsonify({'message': 'Paciente chamado com sucesso!'}), 200
+
+def update_status(nome, cursor, conn):
+    # Atualiza o status para "atendido" após 30 segundos
+    socketio.sleep(30)
+    cursor.execute(
+        'UPDATE fila_pacientes SET status = %s WHERE nome = %s',
+        ('atendido', nome)
+    )
+    conn.commit()
+
+    # Deletar do banco de dados após 20 segundos
+    socketio.sleep(20)
+    cursor.execute('DELETE FROM fila_pacientes WHERE nome = %s', (nome,))
+    conn.commit()
+
 
     return jsonify({'message': 'Paciente chamado com sucesso!'}), 200
 

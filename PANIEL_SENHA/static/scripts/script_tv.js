@@ -27,6 +27,11 @@ function atualizarAtendimentoAtual() {
                 tentativasDeFala = 0;
                 clearInterval(intervaloDeFala);
 
+                // Cancelar qualquer fala anterior
+                if (speechSynthesis.speaking) {
+                    speechSynthesis.cancel();
+                }
+
                 // Chamar o nome do paciente
                 falarNome(atendimentoAtual.nome, atendimentoAtual.guiche);
                 
@@ -34,6 +39,10 @@ function atualizarAtendimentoAtual() {
                 intervaloDeFala = setInterval(() => {
                     tentativasDeFala++;
                     if (tentativasDeFala < maxTentativas) {
+                        // Cancelar a fala anterior antes de falar novamente
+                        if (speechSynthesis.speaking) {
+                            speechSynthesis.cancel();
+                        }
                         falarNome(atendimentoAtual.nome, atendimentoAtual.guiche);
                     } else {
                         clearInterval(intervaloDeFala);

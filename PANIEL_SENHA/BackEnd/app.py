@@ -64,13 +64,15 @@ def adicionar_paciente():
 def get_fila():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT nome, tipo_atendimento FROM fila_pacientes WHERE status = %s', ('aguardando',))
+    cursor.execute('SELECT nome, tipo_atendimento FROM fila_pacientes WHERE status = %s')
     pacientes = cursor.fetchall()
     cursor.close()
     conn.close()
 
     lista_pacientes = [{'nome': paciente[0], 'tipo_atendimento': paciente[1]} for paciente in pacientes]
     return jsonify(lista_pacientes)
+
+
 
 
 @app.route('/chamar-paciente', methods=['POST'])

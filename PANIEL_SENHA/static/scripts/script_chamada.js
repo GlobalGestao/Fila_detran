@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Função para obter e renderizar os pacientes na fila
     function carregarPacientes() {
-        fetch('http://127.0.0.1:5000/get-fila')
+        fetch('http://127.0.0.1:8000/get-fila')
             .then(response => response.json())
             .then(pacientes => {
                 const listaFila = document.getElementById('lista-fila');

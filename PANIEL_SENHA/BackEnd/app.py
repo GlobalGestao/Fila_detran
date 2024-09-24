@@ -3,7 +3,7 @@ from flask_cors import CORS
 from flask_socketio import SocketIO
 import psycopg2
 
-app = Flask(__name__, template_folder='../templates')
+app = Flask(__name__, template_folder='../templates',static_folder='../static')
 
 CORS(app, resources={r"/*": {"origins": "*"}})  # Ajuste de CORS
 socketio = SocketIO(app)

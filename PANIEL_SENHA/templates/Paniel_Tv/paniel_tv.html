@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Senha - TV</title>
-    <link rel="stylesheet" href="/static/css/style_tv.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_tv.css') }}">
     <!-- Adicione o script do Socket.IO -->
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-    <script defer src="/static/scripts/script_tv.js"></script>
+    <script defer src="{{ url_for('static', filename='scripts/script_tv.js') }}"></script>
 </head>
 <body>
     <div class="container">
@@ -15,7 +15,7 @@
         <div class="left-section">
             <!-- Logo da Clínica -->
             <div class="logo-container">
-                <img src="/static/images/logo.png" alt="Logo da Clínica" class="clinic-logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo da Clínica" class="clinic-logo">
             </div>
 
             <!-- Atendimento Atual -->

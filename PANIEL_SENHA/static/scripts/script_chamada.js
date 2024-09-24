@@ -44,20 +44,26 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('Erro ao carregar pacientes:', error));
     }
 
-    // Função para chamar o paciente
-    function chamarPaciente(nome, guiche) {
-        fetch('http://54.207.228.5:8000/chamar-paciente', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nome: nome, guiche: guiche })
-        })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                carregarPacientes();
-            })
-            .catch(error => console.error('Erro ao chamar paciente:', error));
-    }
+function chamarPaciente(nome, guiche) {
+    console.log('Chamar paciente:', { nome, guiche }); // Adiciona log para verificar valores
+    fetch('http://54.207.228.5:8000/chamar-paciente', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome: nome, guiche: guiche })
+    })
+    .then(response => {
+        if (!response.ok) { // Verifica se a resposta não é ok
+            throw new Error('Erro na requisição: ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert(data.message);
+        carregarPacientes();
+    })
+    .catch(error => console.error('Erro ao chamar paciente:', error));
+}
+
 
     // Função para deletar o paciente
     function deletarPaciente(nome) {

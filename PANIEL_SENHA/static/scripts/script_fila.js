@@ -20,7 +20,7 @@ async function adicionarPaciente(tipo) {
 
     // Enviar dados para a API
     try {
-        const response = await fetch('http://127.0.0.1:5000/adicionar-paciente', {
+        const response = await fetch('http://127.0.0.1:8000/adicionar-paciente', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
-from flask_socketio import SocketIO
-import psycopg2
+from flask_socketio import SocketIO, emit
+import psycopg2t
 
 app = Flask(__name__, template_folder='../templates',static_folder='../static')
 
@@ -86,7 +86,7 @@ def chamar_paciente():
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    
+
     try:
         cursor.execute(
             'UPDATE fila_pacientes SET status = %s, guiche = %s WHERE nome = %s',
@@ -98,7 +98,7 @@ def chamar_paciente():
         socketio.emit('paciente_chamado', {'nome': nome, 'guiche': guiche})
 
         # Inicia a tarefa em segundo plano para atualizar o status
-        socketio.start_background_task(update_status, nome, cursor, conn)
+        socketio.start_background_task(update_status, nome)
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -108,19 +108,29 @@ def chamar_paciente():
 
     return jsonify({'message': 'Paciente chamado com sucesso!'}), 200
 
-def update_status(nome, cursor, conn):
-    # Atualiza o status para "atendido" após 30 segundos
-    socketio.sleep(30)
-    cursor.execute(
-        'UPDATE fila_pacientes SET status = %s WHERE nome = %s',
-        ('atendido', nome)
-    )
-    conn.commit()
+def update_status(nome):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    try:
+        # Atualiza o status para "atendido" após 30 segundos
+        socketio.sleep(30)
+        cursor.execute(
+            'UPDATE fila_pacientes SET status = %s WHERE nome = %s',
+            ('atendido', nome)
+        )
+        conn.commit()
 
-    # Deletar do banco de dados após 20 segundos
-    socketio.sleep(20)
-    cursor.execute('DELETE FROM fila_pacientes WHERE nome = %s', (nome,))
-    conn.commit()
+        # Deletar do banco de dados após 20 segundos
+        socketio.sleep(20)
+        cursor.execute('DELETE FROM fila_pacientes WHERE nome = %s', (nome,))
+        conn.commit()
+
+    except Exception as e:
+        print(f"Erro ao atualizar status para {nome}: {str(e)}")
+    finally:
+        cursor.close()
+        conn.close()
 
 
     return jsonify({'message': 'Paciente chamado com sucesso!'}), 200

@@ -107,41 +107,30 @@ def chamar_paciente():
 
     return jsonify({'message': 'Paciente chamado com sucesso!'}), 200
 
-def update_status(nome):
+@app.route('/deletar-paciente', methods=['DELETE'])
+def deletar_paciente():
+    data = request.json
+    nome = data.get('nome')
+
+    if not nome:
+        return jsonify({'message': 'Nome é obrigatório!'}), 400
+
     conn = get_db_connection()
     cursor = conn.cursor()
-    
-    try:
-        # Atualiza o status para "atendido" após 30 segundos
-        socketio.sleep(30)
-        cursor.execute(
-            'UPDATE fila_pacientes SET status = %s WHERE nome = %s',
-            ('atendido', nome)
-        )
-        conn.commit()
 
+    try:
+        cursor.execute('DELETE FROM fila_pacientes WHERE nome = %s', (nome,))
+        conn.commit()
+        if cursor.rowcount == 0:
+            return jsonify({'message': 'Paciente não encontrado!'}), 404
     except Exception as e:
-        print(f"Erro ao atualizar status para {nome}: {str(e)}")
+        return jsonify({'error': str(e)}), 500
     finally:
         cursor.close()
         conn.close()
 
-def update_status(nome, cursor, conn):
-    # Atualiza o status para "atendido" após 30 segundos
-    socketio.sleep(30)
-    cursor.execute(
-        'UPDATE fila_pacientes SET status = %s WHERE nome = %s',
-        ('atendido', nome)
-    )
-    conn.commit()
+    return jsonify({'message': 'Paciente deletado com sucesso!'}), 200
 
-    # Deletar do banco de dados após 20 segundos
-    socketio.sleep(20)
-    cursor.execute('DELETE FROM fila_pacientes WHERE nome = %s', (nome,))
-    conn.commit()
-
-
-    return jsonify({'message': 'Paciente chamado com sucesso!'}), 200
 
 @app.route('/get-atendimento-atual', methods=['GET'])
 def get_atendimento_atual():

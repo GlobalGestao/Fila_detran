@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Principal</title>s
-    <link rel="stylesheet" href="/static/css/style_menu.css">
-    
+    <title>Menu Principal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_menu.css') }}">
 </head>
 <body>
     <div class="menu-container">
         <h1>Painel de Senhas - Menu Principal</h1>
         <nav>
             <ul>
-                <li><a href="/templates/fila/fila.html">Entrada na Fila</a></li>
-                <li><a href="/templates/Chamada/chamada.html">Chamar Pacientes</a></li>
-                <li><a href="/templates/Paniel_Tv/paniel_tv.html">Painel TV</a></li>
+                <li><a href="{{ url_for('fila') }}">Entrada na Fila</a></li>
+                <li><a href="{{ url_for('chamada') }}">Chamar Pacientes</a></li>
+                <li><a href="{{ url_for('paniel_tv') }}">Painel TV</a></li>
             </ul>
         </nav>
     </div>
